@@ -4,6 +4,7 @@ Mix_Chunk *sound = nullptr;
 
 bool isGameRunning = true;
 int colorIndex = 0;
+int screenColorIndex = 5;
 int part = 0;
 
 void handleEvents()
@@ -31,6 +32,18 @@ void handleEvents()
                 }
             }
 
+            if (event.key.keysym.sym == SDLK_f)
+            {
+                if (screenColorIndex == 5)
+                {
+                    screenColorIndex = 0;
+                }
+                else
+                {
+                    screenColorIndex = 5;
+                }
+            }
+
             if (event.key.keysym.sym == SDLK_RIGHT && part <= 7)
             {
                 part++;
@@ -55,6 +68,18 @@ void handleEvents()
                 else
                 {
                     colorIndex = 0;
+                }
+            }
+
+            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK)
+            {
+                if (screenColorIndex == 5)
+                {
+                    screenColorIndex = 0;
+                }
+                else
+                {
+                    screenColorIndex = 5;
                 }
             }
 
@@ -97,21 +122,22 @@ int main(int argc, char *args[])
     SDL_Point circlePosition = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
 
     SDL_Color colors[] = {
-        {255, 255, 255, 0}, // white
-        {255, 0, 0, 0},     // red
-        {0, 255, 0, 0},     // green
-        {0, 0, 255, 0},     // blue
-        {0, 255, 255, 0},   // cyan
+        {255, 255, 255, 255}, // white
+        {255, 0, 0, 255},     // red
+        {0, 255, 0, 255},     // green
+        {0, 0, 255, 255},     // blue
+        {0, 255, 255, 255},   // cyan
+        {0, 0, 0, 255},       // dark
     };
 
     while (isGameRunning)
     {
         handleEvents();
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, colors[screenColorIndex].r, colors[screenColorIndex].g, colors[screenColorIndex].b, colors[screenColorIndex].a);
         SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, colors[colorIndex].r, colors[colorIndex].g, colors[colorIndex].b, 255);
+        SDL_SetRenderDrawColor(renderer, colors[colorIndex].r, colors[colorIndex].g, colors[colorIndex].b, colors[colorIndex].a);
 
         switch (part)
         {
