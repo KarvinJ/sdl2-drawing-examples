@@ -1,5 +1,78 @@
 #include "sdl_starter.h"
 
+Mix_Chunk *sound = nullptr;
+
+bool isGameRunning = true;
+int colorIndex = 0;
+int part = 0;
+
+void handleEvents()
+{
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            isGameRunning = false;
+        }
+
+        if (event.type == SDL_KEYDOWN)
+        {
+            if (event.key.keysym.sym == SDLK_SPACE)
+            {
+                if (colorIndex < 4)
+                {
+                    colorIndex++;
+                }
+                else
+                {
+                    colorIndex = 0;
+                }
+            }
+
+            if (event.key.keysym.sym == SDLK_RIGHT && part <= 7)
+            {
+                part++;
+                Mix_PlayChannel(-1, sound, 0);
+            }
+
+            else if (event.key.keysym.sym == SDLK_LEFT && part > 0)
+            {
+                part--;
+                Mix_PlayChannel(-1, sound, 0);
+            }
+        }
+
+        if (event.type == SDL_CONTROLLERBUTTONDOWN)
+        {
+            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START)
+            {
+                if (colorIndex < 4)
+                {
+                    colorIndex++;
+                }
+                else
+                {
+                    colorIndex = 0;
+                }
+            }
+
+            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER && part <= 7)
+            {
+                part++;
+                Mix_PlayChannel(-1, sound, 0);
+            }
+
+            else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER && part > 0)
+            {
+                part--;
+                Mix_PlayChannel(-1, sound, 0);
+            }
+        }
+    }
+}
+
 int main(int argc, char *args[])
 {
     SDL_Window *window = SDL_CreateWindow("My Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -15,15 +88,13 @@ int main(int argc, char *args[])
         SDL_GameControllerOpen(0);
     }
 
-    Mix_Chunk *sound = loadSound("res/sounds/magic.wav");
+    sound = loadSound("res/sounds/magic.wav");
     Mix_VolumeChunk(sound, MIX_MAX_VOLUME / 2);
 
-    SDL_Rect bounds = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 128, 128};
+    SDL_Rect bounds = {SCREEN_WIDTH / 2 - 128 / 2, SCREEN_HEIGHT / 2 - 128 / 2, 128, 128};
     SDL_Point point1 = {10, 10};
     SDL_Point point2 = {SCREEN_WIDTH - 10, SCREEN_HEIGHT - 10};
-
-    int colorIndex = 0;
-    int part = 0;
+    SDL_Point circlePosition = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
 
     SDL_Color colors[] = {
         {255, 255, 255, 0}, // white
@@ -33,73 +104,9 @@ int main(int argc, char *args[])
         {0, 255, 255, 0},   // cyan
     };
 
-    bool isGameRunning = true;
-
     while (isGameRunning)
     {
-        SDL_Event event;
-
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE)
-            {
-                isGameRunning = false;
-            }
-
-            if (event.type == SDL_KEYDOWN)
-            {
-                if (event.key.keysym.sym == SDLK_SPACE)
-                {
-                    if (colorIndex < 4)
-                    {
-                        colorIndex++;
-                    }
-                    else
-                    {
-                        colorIndex = 0;
-                    }
-                }
-
-                if (event.key.keysym.sym == SDLK_RIGHT && part <= 7)
-                {
-                    part++;
-                    Mix_PlayChannel(-1, sound, 0);
-                }
-
-                else if (event.key.keysym.sym == SDLK_LEFT && part > 0)
-                {
-                    part--;
-                    Mix_PlayChannel(-1, sound, 0);
-                }
-            }
-
-            if (event.type == SDL_CONTROLLERBUTTONDOWN)
-            {
-                if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START)
-                {
-                    if (colorIndex < 4)
-                    {
-                        colorIndex++;
-                    }
-                    else
-                    {
-                        colorIndex = 0;
-                    }
-                }
-
-                if (event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER && part <= 7)
-                {
-                    part++;
-                    Mix_PlayChannel(-1, sound, 0);
-                }
-
-                else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER && part > 0)
-                {
-                    part--;
-                    Mix_PlayChannel(-1, sound, 0);
-                }
-            }
-        }
+        handleEvents();
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
@@ -129,12 +136,12 @@ int main(int argc, char *args[])
 
         case 4:
 
-            SDL_RenderDrawCircle(renderer, bounds.x, bounds.y, 80);
+            SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 80);
             break;
 
         case 5:
 
-            SDL_RenderFillCircle(renderer, bounds.x, bounds.y, 80);
+            SDL_RenderFillCircle(renderer, circlePosition.x, circlePosition.y, 80);
             break;
 
         case 6:
