@@ -4,7 +4,19 @@ Mix_Chunk *sound = nullptr;
 
 bool isGameRunning = true;
 int colorIndex = 0;
-int screenColorIndex = 5;
+int screenColorIndex = 7;
+const int COLORS_SIZE = 8;
+SDL_Color colors[] = {
+    {255, 255, 255, 255}, // white
+    {255, 0, 0, 255},     // red
+    {0, 255, 0, 255},     // green
+    {0, 0, 255, 255},     // blue
+    {0, 255, 255, 255},   // cyan
+    {255, 255, 0, 0},     // brown
+    {255, 0, 255, 0},     // purple
+    {0, 0, 0, 255},       // dark
+};
+
 int part = 8;
 
 void handleEvents()
@@ -22,7 +34,7 @@ void handleEvents()
         {
             if (event.key.keysym.sym == SDLK_SPACE)
             {
-                if (colorIndex < 5)
+                if (colorIndex < 7)
                 {
                     colorIndex++;
                 }
@@ -44,7 +56,7 @@ void handleEvents()
                 }
             }
 
-            if (event.key.keysym.sym == SDLK_RIGHT && part <= 7)
+            if (event.key.keysym.sym == SDLK_RIGHT && part <= 8)
             {
                 part++;
                 Mix_PlayChannel(-1, sound, 0);
@@ -61,7 +73,7 @@ void handleEvents()
         {
             if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START)
             {
-                if (colorIndex < 5)
+                if (colorIndex < COLORS_SIZE)
                 {
                     colorIndex++;
                 }
@@ -73,17 +85,17 @@ void handleEvents()
 
             if (event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK)
             {
-                if (screenColorIndex == 5)
+                if (screenColorIndex == COLORS_SIZE - 1)
                 {
                     screenColorIndex = 0;
                 }
                 else
                 {
-                    screenColorIndex = 5;
+                    screenColorIndex = COLORS_SIZE - 1;
                 }
             }
 
-            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER && part <= 7)
+            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER && part <= 8)
             {
                 part++;
                 Mix_PlayChannel(-1, sound, 0);
@@ -98,7 +110,7 @@ void handleEvents()
     }
 }
 
-void renderEverything(SDL_Renderer *renderer)
+void renderEverything(SDL_Renderer *renderer, bool shouldRenderMultiColor)
 {
     SDL_Point diagnonalPoint1 = {8, 8};
     SDL_Point diagonalPoint2 = {SCREEN_WIDTH - 8, SCREEN_HEIGHT - 8};
@@ -127,10 +139,19 @@ void renderEverything(SDL_Renderer *renderer)
     SDL_RenderDrawLine(renderer, leftPoint.x, leftPoint.y, rightPoint.x, rightPoint.y);
 
     SDL_Point circlePosition = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
-    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 120);
-    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 200);
-    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 280);
-    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 360);
+
+    int radius = 100;
+
+    for (size_t i = 0; i < COLORS_SIZE - 1; i++)
+    {
+        if (shouldRenderMultiColor)
+        {
+            SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, colors[i].a);
+        }
+
+        SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, radius);
+        radius += 80;
+    }
 }
 
 int main(int argc, char *args[])
@@ -155,15 +176,6 @@ int main(int argc, char *args[])
     SDL_Point point1 = {10, 10};
     SDL_Point point2 = {SCREEN_WIDTH - 10, SCREEN_HEIGHT - 10};
     SDL_Point circlePosition = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
-
-    SDL_Color colors[] = {
-        {255, 255, 255, 255}, // white
-        {255, 0, 0, 255},     // red
-        {0, 255, 0, 255},     // green
-        {0, 0, 255, 255},     // blue
-        {0, 255, 255, 255},   // cyan
-        {0, 0, 0, 255},       // dark
-    };
 
     while (isGameRunning)
     {
@@ -217,7 +229,12 @@ int main(int argc, char *args[])
 
         case 8:
 
-            renderEverything(renderer);
+            renderEverything(renderer, false);
+            break;
+
+        case 9:
+
+            renderEverything(renderer, true);
             break;
 
         default:
