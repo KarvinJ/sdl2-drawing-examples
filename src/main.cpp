@@ -21,7 +21,7 @@ int main(int argc, char *args[])
     SDL_Rect playerBounds = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 64, 64};
 
     SDL_Point point1 = {10, 10};
-    SDL_Point point2 = {SCREEN_WIDTH -10, SCREEN_HEIGHT -10};
+    SDL_Point point2 = {SCREEN_WIDTH - 10, SCREEN_HEIGHT - 10};
 
     int colorIndex = 0;
     int part = 0;
@@ -107,8 +107,11 @@ int main(int argc, char *args[])
 
         SDL_SetRenderDrawColor(renderer, colors[colorIndex].r, colors[colorIndex].g, colors[colorIndex].b, 255);
 
-        SDL_RenderDrawPoint(renderer, point1.x, point1.y);
-        SDL_RenderDrawPoint(renderer, point2.x, point2.y);
+        // SDL_RenderDrawPoint(renderer, point1.x, point1.y);
+        // SDL_RenderDrawPoint(renderer, point2.x, point2.y);
+
+        SDL_RenderFillCircle(renderer, point1.x, point1.y, 4);
+        SDL_RenderFillCircle(renderer, point2.x, point2.y, 4);
 
         // SDL_RenderDrawLine(renderer, point1.x, point1.y, point2.x, point2.y);
 
