@@ -107,9 +107,7 @@ int main(int argc, char *args[])
 
         SDL_SetRenderDrawColor(renderer, colors[colorIndex].r, colors[colorIndex].g, colors[colorIndex].b, 255);
 
-        // SDL_RenderDrawPoint(renderer, point1.x, point1.y);
-        // SDL_RenderDrawPoint(renderer, point2.x, point2.y);
-
+        //better using circle instead of points, cuz they are too little. 
         SDL_RenderFillCircle(renderer, point1.x, point1.y, 4);
         SDL_RenderFillCircle(renderer, point2.x, point2.y, 4);
 
