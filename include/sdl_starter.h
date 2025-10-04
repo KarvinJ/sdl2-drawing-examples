@@ -5,8 +5,8 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 
-const int SCREEN_WIDTH = 960;
-const int SCREEN_HEIGHT = 544;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 const int FRAME_RATE = 60;
 
 typedef struct
