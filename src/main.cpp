@@ -5,7 +5,7 @@ Mix_Chunk *sound = nullptr;
 bool isGameRunning = true;
 int colorIndex = 0;
 int screenColorIndex = 5;
-int part = 0;
+int part = 8;
 
 void handleEvents()
 {
@@ -22,7 +22,7 @@ void handleEvents()
         {
             if (event.key.keysym.sym == SDLK_SPACE)
             {
-                if (colorIndex < 4)
+                if (colorIndex < 5)
                 {
                     colorIndex++;
                 }
@@ -61,7 +61,7 @@ void handleEvents()
         {
             if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START)
             {
-                if (colorIndex < 4)
+                if (colorIndex < 5)
                 {
                     colorIndex++;
                 }
@@ -96,6 +96,41 @@ void handleEvents()
             }
         }
     }
+}
+
+void renderEverything(SDL_Renderer *renderer)
+{
+    SDL_Point diagnonalPoint1 = {8, 8};
+    SDL_Point diagonalPoint2 = {SCREEN_WIDTH - 8, SCREEN_HEIGHT - 8};
+
+    SDL_RenderFillCircle(renderer, diagnonalPoint1.x, diagnonalPoint1.y, 8);
+    SDL_RenderFillCircle(renderer, diagonalPoint2.x, diagonalPoint2.y, 8);
+    SDL_RenderDrawLine(renderer, diagnonalPoint1.x, diagnonalPoint1.y, diagonalPoint2.x, diagonalPoint2.y);
+
+    SDL_Point diagnonal2Point1 = {8, SCREEN_HEIGHT - 8};
+    SDL_Point diagonal2Point2 = {SCREEN_WIDTH - 8, 8};
+
+    SDL_RenderFillCircle(renderer, diagnonal2Point1.x, diagnonal2Point1.y, 8);
+    SDL_RenderFillCircle(renderer, diagonal2Point2.x, diagonal2Point2.y, 8);
+    SDL_RenderDrawLine(renderer, diagnonal2Point1.x, diagnonal2Point1.y, diagonal2Point2.x, diagonal2Point2.y);
+
+    SDL_Point topPoint = {SCREEN_WIDTH / 2, 8};
+    SDL_Point bottomPoint = {SCREEN_WIDTH / 2, SCREEN_HEIGHT - 8};
+    SDL_RenderFillCircle(renderer, topPoint.x, topPoint.y, 8);
+    SDL_RenderFillCircle(renderer, bottomPoint.x, bottomPoint.y, 8);
+    SDL_RenderDrawLine(renderer, topPoint.x, topPoint.y, bottomPoint.x, bottomPoint.y);
+
+    SDL_Point rightPoint = {8, SCREEN_HEIGHT / 2};
+    SDL_Point leftPoint = {SCREEN_WIDTH - 8, SCREEN_HEIGHT / 2};
+    SDL_RenderFillCircle(renderer, rightPoint.x, rightPoint.y, 8);
+    SDL_RenderFillCircle(renderer, leftPoint.x, leftPoint.y, 8);
+    SDL_RenderDrawLine(renderer, leftPoint.x, leftPoint.y, rightPoint.x, rightPoint.y);
+
+    SDL_Point circlePosition = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
+    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 120);
+    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 200);
+    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 280);
+    SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, 360);
 }
 
 int main(int argc, char *args[])
@@ -171,12 +206,18 @@ int main(int argc, char *args[])
             break;
 
         case 6:
+
             SDL_RenderDrawRect(renderer, &bounds);
             break;
 
         case 7:
 
             SDL_RenderFillRect(renderer, &bounds);
+            break;
+
+        case 8:
+
+            renderEverything(renderer);
             break;
 
         default:
