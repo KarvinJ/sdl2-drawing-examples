@@ -18,8 +18,7 @@ int main(int argc, char *args[])
     Mix_Chunk *sound = loadSound("res/sounds/magic.wav");
     Mix_VolumeChunk(sound, MIX_MAX_VOLUME / 2);
 
-    SDL_Rect playerBounds = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 64, 64};
-
+    SDL_Rect bounds = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 128, 128};
     SDL_Point point1 = {10, 10};
     SDL_Point point2 = {SCREEN_WIDTH - 10, SCREEN_HEIGHT - 10};
 
@@ -61,15 +60,15 @@ int main(int argc, char *args[])
                     }
                 }
 
-                if (event.key.keysym.sym == SDLK_RIGHT && part <= 5)
+                if (event.key.keysym.sym == SDLK_RIGHT && part <= 7)
                 {
                     part++;
                     Mix_PlayChannel(-1, sound, 0);
                 }
 
-                else if (event.key.keysym.sym == SDLK_LEFT && part >= 0)
+                else if (event.key.keysym.sym == SDLK_LEFT && part > 0)
                 {
-                    part++;
+                    part--;
                     Mix_PlayChannel(-1, sound, 0);
                 }
             }
@@ -88,13 +87,13 @@ int main(int argc, char *args[])
                     }
                 }
 
-                if (event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER && part <= 5)
+                if (event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER && part <= 7)
                 {
                     part++;
                     Mix_PlayChannel(-1, sound, 0);
                 }
 
-                else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER && part >= 0)
+                else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER && part > 0)
                 {
                     part--;
                     Mix_PlayChannel(-1, sound, 0);
@@ -107,21 +106,51 @@ int main(int argc, char *args[])
 
         SDL_SetRenderDrawColor(renderer, colors[colorIndex].r, colors[colorIndex].g, colors[colorIndex].b, 255);
 
-        //better using circle instead of points, cuz they are too little. 
-        SDL_RenderFillCircle(renderer, point1.x, point1.y, 4);
-        SDL_RenderFillCircle(renderer, point2.x, point2.y, 4);
+        switch (part)
+        {
 
-        // SDL_RenderDrawLine(renderer, point1.x, point1.y, point2.x, point2.y);
+        case 1:
 
-        SDL_RenderDrawRect(renderer, &playerBounds);
-        // SDL_RenderFillRect(renderer, &playerBounds);
+            SDL_RenderDrawPoint(renderer, point1.x, point1.y);
+            SDL_RenderDrawPoint(renderer, point2.x, point2.y);
+            break;
+        case 2:
 
-        // SDL_RenderFillCircle(renderer, 400, 200, 40);
-        // SDL_RenderDrawCircle(renderer, 400, 400, 40);
+            SDL_RenderFillCircle(renderer, point1.x, point1.y, 8);
+            SDL_RenderFillCircle(renderer, point2.x, point2.y, 8);
+            break;
+
+        case 3:
+
+            SDL_RenderFillCircle(renderer, point1.x, point1.y, 8);
+            SDL_RenderFillCircle(renderer, point2.x, point2.y, 8);
+            SDL_RenderDrawLine(renderer, point1.x, point1.y, point2.x, point2.y);
+            break;
+
+        case 4:
+
+            SDL_RenderDrawCircle(renderer, bounds.x, bounds.y, 80);
+            break;
+
+        case 5:
+
+            SDL_RenderFillCircle(renderer, bounds.x, bounds.y, 80);
+            break;
+
+        case 6:
+            SDL_RenderDrawRect(renderer, &bounds);
+            break;
+
+        case 7:
+
+            SDL_RenderFillRect(renderer, &bounds);
+            break;
+
+        default:
+            break;
+        }
 
         SDL_RenderPresent(renderer);
-
-        // capFrameRate(currentFrameTime);
     }
 
     Mix_FreeChunk(sound);
