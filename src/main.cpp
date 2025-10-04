@@ -3,6 +3,7 @@
 Mix_Chunk *sound = nullptr;
 
 bool isGameRunning = true;
+int part = 0;
 int colorIndex = 0;
 int screenColorIndex = 7;
 const int COLORS_SIZE = 8;
@@ -16,8 +17,6 @@ SDL_Color colors[] = {
     {255, 0, 255, 0},     // purple
     {0, 0, 0, 255},       // dark
 };
-
-int part = 8;
 
 void handleEvents()
 {
@@ -71,6 +70,11 @@ void handleEvents()
 
         if (event.type == SDL_CONTROLLERBUTTONDOWN)
         {
+            if (event.cbutton.button == SDL_CONTROLLER_BUTTON_A)
+            {
+                isGameRunning = false;
+            }
+
             if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START)
             {
                 if (colorIndex < COLORS_SIZE)
