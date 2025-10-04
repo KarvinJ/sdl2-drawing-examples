@@ -114,7 +114,7 @@ int main(int argc, char *args[])
     }
 
     sound = loadSound("res/sounds/magic.wav");
-    Mix_VolumeChunk(sound, MIX_MAX_VOLUME / 2);
+    Mix_VolumeChunk(sound, MIX_MAX_VOLUME / 4);
 
     SDL_Rect bounds = {SCREEN_WIDTH / 2 - 128 / 2, SCREEN_HEIGHT / 2 - 128 / 2, 128, 128};
     SDL_Point point1 = {10, 10};
