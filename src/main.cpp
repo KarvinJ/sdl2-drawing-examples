@@ -7,6 +7,7 @@ int part = 0;
 int colorIndex = 0;
 int screenColorIndex = 7;
 const int COLORS_SIZE = 8;
+
 SDL_Color colors[] = {
     {255, 255, 255, 255}, // white
     {255, 0, 0, 255},     // red
@@ -33,7 +34,7 @@ void handleEvents()
         {
             if (event.key.keysym.sym == SDLK_SPACE)
             {
-                if (colorIndex < 7)
+                if (colorIndex < COLORS_SIZE)
                 {
                     colorIndex++;
                 }
@@ -45,13 +46,13 @@ void handleEvents()
 
             if (event.key.keysym.sym == SDLK_f)
             {
-                if (screenColorIndex == 5)
+                if (screenColorIndex == COLORS_SIZE - 1)
                 {
                     screenColorIndex = 0;
                 }
                 else
                 {
-                    screenColorIndex = 5;
+                    screenColorIndex = COLORS_SIZE - 1;
                 }
             }
 
@@ -142,8 +143,6 @@ void renderEverything(SDL_Renderer *renderer, bool shouldRenderMultiColor)
     SDL_RenderFillCircle(renderer, leftPoint.x, leftPoint.y, 8);
     SDL_RenderDrawLine(renderer, leftPoint.x, leftPoint.y, rightPoint.x, rightPoint.y);
 
-    SDL_Point circlePosition = {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
-
     int radius = 100;
 
     for (size_t i = 0; i < COLORS_SIZE - 1; i++)
@@ -153,7 +152,7 @@ void renderEverything(SDL_Renderer *renderer, bool shouldRenderMultiColor)
             SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, colors[i].a);
         }
 
-        SDL_RenderDrawCircle(renderer, circlePosition.x, circlePosition.y, radius);
+        SDL_RenderDrawCircle(renderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, radius);
         radius += 80;
     }
 }
